@@ -99,7 +99,7 @@ public class Server {
                     csock = ssock.accept();
                     System.out.println("Zaakceptowane połączenie od klienta: "+ csock);
                     System.out.println("Test wysylania pliku...");
-                    sendfile(fis, bis, os, csock);
+                    //sendfile(fis, bis, os, csock);
                     csock.close();
                     csock = ssock.accept();
                     System.out.println("Test odbierania pliku...");
