@@ -15,7 +15,7 @@ import java.util.*;
  */
 public class Server {
     // plik do wyslania do klienta (poki co w te strone)
-    public final static String fileToSend = "pliktekstowyserwera.txt";
+    public final static String fileToSend = "plikgraficzny.jpg";
     public static String fileToSave = "pliktekstowyklienta_otrzymany.txt";
     public static String ip = "localhost";
     public static int portnum = 1000;
@@ -99,7 +99,7 @@ public class Server {
                     csock = ssock.accept();
                     System.out.println("Zaakceptowane połączenie od klienta: "+ csock);
                     System.out.println("Test wysylania pliku...");
-                    //sendfile(fis, bis, os, csock);
+                    sendfile(fis, bis, os, csock);
                     csock.close();
                     csock = ssock.accept();
                     System.out.println("Test odbierania pliku...");

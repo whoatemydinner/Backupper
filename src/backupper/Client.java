@@ -16,7 +16,7 @@ import java.util.*;
 public class Client {
     public static String ip = "localhost";
     public static int portnum = 1000;
-    public static String fileToSave = "pliktekstowyserwera_otrzymany.txt";
+    public static String fileToSave = "plikgraficzny_otrzymany.jpg";
     public final static String fileToSend = "pliktekstowyklienta.txt";
     public static int maxFileSize = 6000000; // no nie jest to optymalne, tylko 6 mb
     
