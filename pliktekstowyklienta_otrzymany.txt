@@ -1,1 +1,0 @@
-Moj serwer to fanatyk Javy, ca³y RAM zajebany chujowym garbage collectingiem najgorzej.

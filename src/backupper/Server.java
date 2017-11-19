@@ -15,45 +15,10 @@ import java.util.*;
  */
 public class Server {
     // plik do wyslania do klienta (poki co w te strone)
-    public final static String fileToSend = "plikgraficzny.jpg";
+    //public final static String fileToSend = "plikgraficzny.jpg";
     public static String fileToSave = "kombi_kopia.mp3";
     public static String ip = "localhost";
     public static int portnum = 1000;
-    public static int maxFileSize = 6000000;
-    
-    private static void sendfile(FileInputStream fis, BufferedInputStream bis, OutputStream os, Socket csock) throws IOException{
-        //tutaj wysylamy plik od teraz, serio
-        File mf = new File(fileToSend);
-        int count = 0;
-        // ustalamy dlugosc pliku
-        byte[] bytearray = new byte[4096];
-        fis = new FileInputStream(mf);
-        bis = new BufferedInputStream(fis);
-        os = csock.getOutputStream();
-        while ((count = bis.read(bytearray)) >= 0) {
-            os.write(bytearray, 0, count); 
-        }
-        System.out.println("Wysyłanie pliku " + fileToSend + "(wielkość " + bytearray.length + "b)");
-        os.write(bytearray,0,bytearray.length);
-        // spuszczamy bajty
-        os.flush();
-        System.out.println("Zrobione. Z fartem, mordo.");
-        
-    }
-    
-    private static void receivefile(Socket csock, FileOutputStream fos, BufferedOutputStream bos) throws IOException{
-        int count = 0;
-        // sprobujmy otrzymac plik
-        byte[] bytearray = new byte[4096];
-        InputStream is = csock.getInputStream();
-        fos = new FileOutputStream(fileToSave);
-        bos = new BufferedOutputStream(fos);
-        while ((count = is.read(bytearray)) >= 0){
-            bos.write(bytearray,0,count);
-        }
-        bos.flush();
-        System.out.println("Plik zostal zapisany pod nazwa " + fileToSave + " (" + count + "b).");
-    }
     
     public static void main(String[] args) throws IOException{
         // ladowanie ustawien serwera z pliku
@@ -94,12 +59,21 @@ public class Server {
                 try {
                     csock = ssock.accept();
                     System.out.println("Zaakceptowane połączenie od klienta: "+ csock);
-                    System.out.println("Test wysylania pliku...");
-                    sendfile(fis, bis, os, csock);
+                    System.out.println("Co chcesz teraz zrobić?");
+                    System.out.println("[1] Wyslac plik");
+                    System.out.println("[2] Odebrac plik");
+                    Scanner scan = new Scanner(System.in);
+                    int opt = scan.nextInt();
+                    if (opt == 1){
+                        File mf = FileChooser.fileChooser();
+                        System.out.println("Test wysylania pliku...");
+                        FileHandler.sendfile(fis, bis, os, csock, mf);
+                    } else {
+                        File gf = new File(fileToSave);
+                        System.out.println("Test odbierania pliku...");
+                        FileHandler.receivefile(csock, fos, bos, gf);
+                    }
                     csock.close();
-                    csock = ssock.accept();
-                    System.out.println("Test odbierania pliku...");
-                    receivefile(csock, fos, bos);
                     
                 } finally {
                     if (bis != null) bis.close();
