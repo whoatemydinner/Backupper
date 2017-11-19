@@ -16,46 +16,43 @@ import java.util.*;
 public class Server {
     // plik do wyslania do klienta (poki co w te strone)
     public final static String fileToSend = "plikgraficzny.jpg";
-    public static String fileToSave = "pliktekstowyklienta_otrzymany.txt";
+    public static String fileToSave = "kombi_kopia.mp3";
     public static String ip = "localhost";
     public static int portnum = 1000;
     public static int maxFileSize = 6000000;
     
     private static void sendfile(FileInputStream fis, BufferedInputStream bis, OutputStream os, Socket csock) throws IOException{
-        // tutaj wysylamy plik od teraz, serio
+        //tutaj wysylamy plik od teraz, serio
         File mf = new File(fileToSend);
+        int count = 0;
         // ustalamy dlugosc pliku
-        byte[] bytearray = new byte[(int)mf.length()];
+        byte[] bytearray = new byte[4096];
         fis = new FileInputStream(mf);
         bis = new BufferedInputStream(fis);
-        bis.read(bytearray,0,bytearray.length);
         os = csock.getOutputStream();
+        while ((count = bis.read(bytearray)) >= 0) {
+            os.write(bytearray, 0, count); 
+        }
         System.out.println("Wysyłanie pliku " + fileToSend + "(wielkość " + bytearray.length + "b)");
         os.write(bytearray,0,bytearray.length);
         // spuszczamy bajty
         os.flush();
         System.out.println("Zrobione. Z fartem, mordo.");
+        
     }
     
     private static void receivefile(Socket csock, FileOutputStream fos, BufferedOutputStream bos) throws IOException{
-        int bytesRead;
-        int currentByte = 0;
+        int count = 0;
         // sprobujmy otrzymac plik
-        byte[] bytearray = new byte[maxFileSize];
+        byte[] bytearray = new byte[4096];
         InputStream is = csock.getInputStream();
         fos = new FileOutputStream(fileToSave);
         bos = new BufferedOutputStream(fos);
-        bytesRead = is.read(bytearray,0,bytearray.length);
-        currentByte = bytesRead;
-            
-        do {
-            bytesRead = is.read(bytearray, currentByte, (bytearray.length-currentByte));
-            if (bytesRead >= 0) currentByte += bytesRead;
-        } while (bytesRead < -1);
-            
-        bos.write(bytearray, 0, currentByte);
+        while ((count = is.read(bytearray)) >= 0){
+            bos.write(bytearray,0,count);
+        }
         bos.flush();
-        System.out.println("Plik zostal zapisany pod nazwa " + fileToSave + " (" + currentByte + "b).");
+        System.out.println("Plik zostal zapisany pod nazwa " + fileToSave + " (" + count + "b).");
     }
     
     public static void main(String[] args) throws IOException{
@@ -82,7 +79,6 @@ public class Server {
         System.out.println(ip);
         System.out.println(portnum);
         
-        // sprobujemy wyslac plik
         FileInputStream fis = null;
         BufferedInputStream bis = null;
         OutputStream os = null;
@@ -104,7 +100,7 @@ public class Server {
                     csock = ssock.accept();
                     System.out.println("Test odbierania pliku...");
                     receivefile(csock, fos, bos);
-                    csock.close();
+                    
                 } finally {
                     if (bis != null) bis.close();
                     if (os != null) os.close();
