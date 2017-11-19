@@ -17,7 +17,64 @@ public class Client {
     public static String ip = "localhost";
     public static int portnum = 1000;
     public static String fileToSave = "plikgraficzny_otrzymany.jpg";
-    public final static String fileToSend = "kombi.mp3";
+    //public final static String fileToSend = "kombi.mp3";
+    public static File currentFile;
+    public static ArrayList<ArchivedFile> archived = new ArrayList<ArchivedFile>();
+    
+    public static void loadList() throws IOException{
+        try {
+        FileInputStream fis = new FileInputStream("list.tmp");
+        ObjectInputStream ois = new ObjectInputStream(fis);
+        archived = (ArrayList<ArchivedFile>) ois.readObject();
+        ois.close();
+        } catch(ClassNotFoundException e){
+            e.printStackTrace();
+        }
+    }
+    
+    public static void updateList() throws IOException{
+        FileOutputStream fos = new FileOutputStream("list.tmp");
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        oos.writeObject(archived);
+        oos.close();
+    }
+    
+    public static void emptyList(){
+        archived.clear();
+    }
+    
+    public static void addToList(ArchivedFile af){
+        archived.add(af);
+    }
+    
+    public static void sendFiles() throws UnknownHostException{
+        FileInputStream fis = null;
+        BufferedInputStream bis = null;
+        OutputStream os = null;
+        FileOutputStream fos = null;
+        BufferedOutputStream bos = null;
+        Socket ssock = null;
+        
+        Iterator itr=Client.archived.iterator(); 
+        while(itr.hasNext()){
+            int i = 0;
+            try{
+                ssock = new Socket(ip, portnum);
+                System.out.println(ip + " " + portnum);
+                ArchivedFile af = (ArchivedFile)itr.next();
+                File cf = new File(af.path);
+                os = ssock.getOutputStream();
+                PrintWriter pw = new PrintWriter(os, true);
+                //pw.println("FILENAME");
+                //FileHandler.sendFileName(af.name, ssock);
+                //os = ssock.getOutputStream();
+                pw.println("BRACEFORFILES");
+                FileHandler.sendfile(fis, bis, os, ssock, cf);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
     
     public static void main(String[] args) throws IOException{
         // ladowanie ustawien klienta z pliku
@@ -41,32 +98,15 @@ public class Client {
 		}
 	}
         
-        FileInputStream fis = null;
-        BufferedInputStream bis = null;
-        OutputStream os = null;
-        FileOutputStream fos = null;
-        BufferedOutputStream bos = null;
-        Socket ssock = null;
-        
-        try {
-            File mf = new File(fileToSend);
-            //splitfile(mf);
-            //File k = new File("kombi.mp3.000");
-            ssock = new Socket(ip, portnum);
-            System.out.println("Laczenie...");
-            System.out.println("Test z otrzymywaniem pliku...");
-            File gf = new File(fileToSave);
-            FileHandler.receivefile(ssock, fos, bos, gf);
-            ssock.close();
-            System.out.println("Test z wysyłaniem pliku...");
-            ssock = new Socket(ip, portnum);
-            FileHandler.sendfile(fis,bis,os,ssock,mf);
+        //try {
+            // odpalamy okno klienta, zapraszam do ClientWindow po szczegóły
+            new ClientWindow().setVisible(true);
             
-        } finally {
+        /*} finally {
             if (fos != null) fos.close();
             if (bos != null) bos.close();
             if (ssock != null) ssock.close();
-        }
+        }*/
         
     }
 }
