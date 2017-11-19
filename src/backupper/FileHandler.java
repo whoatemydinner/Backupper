@@ -14,6 +14,12 @@ import java.util.*;
  * @author Piotr
  */
 public class FileHandler {
+    /**
+     * Ta metoda powinna wysyłać nazwę pliku po sockecie do adresata. Nie umiem.
+     * @param s
+     * @param ssock
+     * @throws IOException 
+     */
     public static void sendFileName(String s, Socket ssock) throws IOException{
         PrintStream ps = new PrintStream(ssock.getOutputStream());
         ps.print(s);
@@ -30,6 +36,12 @@ public class FileHandler {
         */
     }
     
+    /**
+     * Ta metoda powinnna odbierać nazwę pliku i potem wkładać ją jako currentFileName w serwerze. Nie umiem.
+     * @param csock
+     * @return
+     * @throws IOException 
+     */
     public static String receiveFileName(Socket csock) throws IOException{
         String s;
         Scanner sc = new Scanner(csock.getInputStream());
@@ -39,6 +51,11 @@ public class FileHandler {
         return s;
     }
     
+    /**
+     * Metoda odbierająca wysyłany plik, działa buforowo i może w teorii przesyłać pliki o dowolnym rozmiarze, do 2GB włącznie.
+     * @param ssock Socket docelowy.
+     * @throws IOException 
+     */
     public static void receivefile(Socket ssock/*, FileOutputStream fos, BufferedOutputStream bos, File mf*/) throws IOException{
         // póki nie udało się naprawić interfejsu z wysyłaniem nazw plików losuje nazwy XDDDD
         Random generator = new Random(); 
@@ -57,6 +74,15 @@ public class FileHandler {
         System.out.println("Plik otrzymany. Trzymaj się ramy, to się nie posramy.");
     }
     
+    /**
+     * Wysłanie pliku. Jestem na 90% pewien, że wystarczyłoby przekazywać socketa i file.
+     * @param fis FileInputStream do zamiany na buforowany.
+     * @param bis BufferedInputStream, potrzebny do implementacji bufora.
+     * @param os Stream wyjściowy.
+     * @param csock Socket docelowy.
+     * @param mf Plik, który chcemy zamienić na stream.
+     * @throws IOException 
+     */
     public static void sendfile(FileInputStream fis, BufferedInputStream bis, OutputStream os, Socket csock, File mf) throws IOException{
         int count = 0;
         // ustalamy dlugosc pliku

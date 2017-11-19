@@ -28,6 +28,9 @@ public class ServerThread implements Runnable {
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
   //          OutputStream os = csock.getOutputStream();
    //         PrintWriter pw = new PrintWriter(os, true);
+   /**
+    * Teoretycznie - serwer nasłuchuje na słowa-klucze (komendy) i potem odbiera i robi co ma robić z danymi. Niestety przesyłanie nazw plików (FILENAME) nie działa, a samych plików tak pół na pół.
+    */
             String clientmessage = br.readLine();
             if (clientmessage!=null){
                 if (clientmessage.equals("FILENAME")){

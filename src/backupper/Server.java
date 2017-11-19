@@ -56,10 +56,14 @@ public class Server {
         
         
         //try {
+            /**
+             * OTWIERAMY SERWER
+             */
             ServerSocket ssock = new ServerSocket(portnum);
             System.out.println("Witam, serwer z tej strony, czekam na połączenia.");
             while(true) {
                 Socket csock = ssock.accept();
+                // zakładamy wątek
                 new Thread(new ServerThread(csock)).start();
                 
                 /*

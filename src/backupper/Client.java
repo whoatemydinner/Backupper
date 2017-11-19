@@ -17,10 +17,13 @@ public class Client {
     public static String ip = "localhost";
     public static int portnum = 1000;
     public static String fileToSave = "plikgraficzny_otrzymany.jpg";
-    //public final static String fileToSend = "kombi.mp3";
     public static File currentFile;
     public static ArrayList<ArchivedFile> archived = new ArrayList<ArchivedFile>();
     
+    /**
+     * Metoda implementująca samo załadowanie listy z pliku do pamięci, dzęiki czemu wiemy, które pliki archiwizujemy.
+     * @throws IOException 
+     */
     public static void loadList() throws IOException{
         try {
         FileInputStream fis = new FileInputStream("list.tmp");
@@ -32,6 +35,10 @@ public class Client {
         }
     }
     
+    /**
+     * Metoda aktualizująca listę archiwizowanych plików.
+     * @throws IOException 
+     */
     public static void updateList() throws IOException{
         FileOutputStream fos = new FileOutputStream("list.tmp");
         ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -39,14 +46,25 @@ public class Client {
         oos.close();
     }
     
+    /**
+     * Metoda czyszcząca listę archiwizowanych plików. TODO: Usuwanie pojedynczych plików z listy, co nie powinno być problemem, bo to lista po prostu.
+     */
     public static void emptyList(){
         archived.clear();
     }
     
+    /**
+     * Dodawanie pliku do listy.
+     * @param af 
+     */
     public static void addToList(ArchivedFile af){
         archived.add(af);
     }
     
+    /**
+     * Wysyłanie całej listy plików. Mozna włożyć proste sprawdzanie, że jak wszystkie parametry od serwera się zgadzają (tylko trzeba je uzyskać...) to można plik pominąć.
+     * @throws UnknownHostException 
+     */
     public static void sendFiles() throws UnknownHostException{
         FileInputStream fis = null;
         BufferedInputStream bis = null;

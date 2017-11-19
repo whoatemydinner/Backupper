@@ -17,6 +17,9 @@ import java.util.logging.Logger;
  */
 public class ClientWindow extends javax.swing.JFrame {
 
+    /**
+     * Metoda, która ładuje listę przy otwarciu programu.
+     */
     public void initializeList(){
         try{
         Client.loadList();
@@ -26,6 +29,9 @@ public class ClientWindow extends javax.swing.JFrame {
         updateDisplayList();
     }
     
+    /**
+     * Metoda aktualizująca listę plików w okienku klienta.
+     */
     public void updateDisplayList(){
         String s = "";
         Iterator itr=Client.archived.iterator(); 

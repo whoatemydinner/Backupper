@@ -9,7 +9,7 @@ import java.io.File;
 import javax.swing.*;
 
 /**
- *
+ * To jest tak oczywiste, że potraktuję Cię jak poważną osobę i nie napiszę, że to po protu okienko wyboru pliku.
  * @author Piotr
  */
 public class FileChooser {
